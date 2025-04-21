@@ -302,68 +302,74 @@ export function PropertyList() {
               
               return (
                 <Card key={property.id} className="overflow-hidden border border-neutral-200 hover:shadow-md transition-shadow">
-                  <Link href={`/properties/${property.id}`}>
-                    <div className="p-4 cursor-pointer">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-base font-medium text-neutral-900 line-clamp-1">{property.title}</h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.colorClass}`}>
-                          {statusInfo.label}
-                        </span>
+                  <div 
+                    className="p-4 cursor-pointer" 
+                    onClick={() => window.location.href = `/properties/${property.id}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-base font-medium text-neutral-900 line-clamp-1">{property.title}</h3>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.colorClass}`}>
+                        {statusInfo.label}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="h-20 w-20 flex-shrink-0 rounded-md bg-neutral-200 overflow-hidden">
+                        {property.images && (property.images as string[])[0] ? (
+                          <img 
+                            src={(property.images as string[])[0]} 
+                            alt={property.title} 
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-neutral-200 flex items-center justify-center text-neutral-400">
+                            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
                       
-                      <div className="flex items-start space-x-3">
-                        <div className="h-20 w-20 flex-shrink-0 rounded-md bg-neutral-200 overflow-hidden">
-                          {property.images && (property.images as string[])[0] ? (
-                            <img 
-                              src={(property.images as string[])[0]} 
-                              alt={property.title} 
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="h-full w-full bg-neutral-200 flex items-center justify-center text-neutral-400">
-                              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                        
-                        <div className="flex-1">
-                          <p className="text-sm text-neutral-500 mb-1">
-                            {property.location}
-                          </p>
-                          <p className="text-xs text-neutral-500 mb-2">
-                            {propertyTypeDisplay} · {property.bedrooms || 0} hab · {property.bathrooms || 0} baño{property.bathrooms !== 1 ? 's' : ''}
-                          </p>
-                          <p className="text-base font-semibold text-primary-700">
-                            {formatCurrency(property.price)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-end mt-3 space-x-2">
-                        <Link href={`/properties/${property.id}/edit`}>
-                          <Button size="sm" variant="outline" className="text-xs h-8">
-                            Editar
-                          </Button>
-                        </Link>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="text-xs h-8 text-red-600 border-red-200 hover:bg-red-50"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (confirm("¿Estás seguro de que deseas eliminar esta propiedad?")) {
-                              // Delete property
-                            }
-                          }}
-                        >
-                          Eliminar
-                        </Button>
+                      <div className="flex-1">
+                        <p className="text-sm text-neutral-500 mb-1">
+                          {property.location}
+                        </p>
+                        <p className="text-xs text-neutral-500 mb-2">
+                          {propertyTypeDisplay} · {property.bedrooms || 0} hab · {property.bathrooms || 0} baño{property.bathrooms !== 1 ? 's' : ''}
+                        </p>
+                        <p className="text-base font-semibold text-primary-700">
+                          {formatCurrency(property.price)}
+                        </p>
                       </div>
                     </div>
-                  </Link>
+                    
+                    <div className="flex justify-end mt-3 space-x-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs h-8"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = `/properties/${property.id}/edit`;
+                        }}
+                      >
+                        Editar
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs h-8 text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm("¿Estás seguro de que deseas eliminar esta propiedad?")) {
+                            // Delete property
+                          }
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  </div>
                 </Card>
               );
             })

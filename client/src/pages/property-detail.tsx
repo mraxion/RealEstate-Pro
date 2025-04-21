@@ -114,26 +114,35 @@ export default function PropertyDetail() {
         {/* Header with actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{property.title}</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 line-clamp-2">{property.title}</h1>
             <div className="flex items-center mt-1">
-              <MapPin className="h-4 w-4 text-gray-500 mr-1" />
-              <span className="text-gray-600 text-sm">{property.location}</span>
+              <MapPin className="h-4 w-4 text-gray-500 mr-1 flex-shrink-0" />
+              <span className="text-gray-600 text-sm line-clamp-1">{property.location}</span>
+            </div>
+            <div className="flex items-center mt-2">
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusInfo.colorClass}`}>
+                {statusInfo.label}
+              </span>
+              <span className="mx-2 text-gray-400">•</span>
+              <span className="text-gray-700 text-sm font-medium">{formatCurrency(property.price)}</span>
             </div>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex gap-2">
             <Button
               variant="outline"
+              size="sm"
+              className="h-9 md:h-10"
               onClick={() => navigate(`/properties/${id}/edit`)}
             >
-              <Edit className="h-4 w-4 mr-2" />
-              Editar
+              <Edit className="h-4 w-4 mr-1 md:mr-2" />
+              <span className="md:inline">Editar</span>
             </Button>
             
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar
+                <Button variant="destructive" size="sm" className="h-9 md:h-10">
+                  <Trash2 className="h-4 w-4 mr-1 md:mr-2" />
+                  <span className="md:inline">Eliminar</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -160,8 +169,8 @@ export default function PropertyDetail() {
         </div>
 
         {/* Property images */}
-        <Card>
-          <CardContent className="p-6">
+        <Card className="overflow-hidden border-neutral-200">
+          <CardContent className="p-0 md:p-6">
             {(property.images as string[])?.length > 0 ? (
               <Carousel className="w-full">
                 <CarouselContent>
@@ -181,29 +190,109 @@ export default function PropertyDetail() {
                 <CarouselNext className="right-2" />
               </Carousel>
             ) : (
-              <div className="w-full rounded-md bg-gray-100 flex items-center justify-center" style={{ height: '300px' }}>
-                <Building className="h-16 w-16 text-gray-400" />
+              <div className="w-full rounded-md bg-gray-100 flex items-center justify-center" style={{ height: '250px' }}>
+                <Building className="h-12 w-12 md:h-16 md:w-16 text-gray-400" />
               </div>
             )}
           </CardContent>
         </Card>
 
+        {/* Quick Actions (visible only on mobile) */}
+        <div className="md:hidden">
+          <Card>
+            <CardContent className="p-4 grid grid-cols-2 gap-2">
+              <Button className="w-full text-xs justify-center" size="sm" variant="outline">
+                <Calendar className="mr-1.5 h-3.5 w-3.5" />
+                Visita
+              </Button>
+              <Button className="w-full text-xs justify-center" size="sm" variant="outline">
+                <Users className="mr-1.5 h-3.5 w-3.5" />
+                Lead
+              </Button>
+              <Button className="w-full text-xs justify-center" size="sm" variant="outline">
+                <Mail className="mr-1.5 h-3.5 w-3.5" />
+                Email
+              </Button>
+              <Button className="w-full text-xs justify-center" size="sm" variant="outline">
+                <Share className="mr-1.5 h-3.5 w-3.5" />
+                Compartir
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Property Key Details (visible only on mobile) */}
+        <div className="md:hidden">
+          <Card>
+            <CardContent className="p-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <Building className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-gray-500">Tipo</p>
+                    <p className="text-sm font-medium">{propertyTypeDisplay}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <Euro className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-gray-500">Precio</p>
+                    <p className="text-sm font-medium">{formatCurrency(property.price)}</p>
+                  </div>
+                </div>
+                
+                {property.bedrooms !== undefined && property.bedrooms !== null && (
+                  <div className="flex items-center">
+                    <Home className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500">Dormitorios</p>
+                      <p className="text-sm font-medium">{property.bedrooms}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {property.bathrooms !== undefined && property.bathrooms !== null && (
+                  <div className="flex items-center">
+                    <Bath className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500">Baños</p>
+                      <p className="text-sm font-medium">{property.bathrooms}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {property.area !== undefined && property.area !== null && (
+                  <div className="flex items-center">
+                    <LandPlot className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500">Superficie</p>
+                      <p className="text-sm font-medium">{property.area} m²</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Property details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
             <Card>
-              <CardHeader>
-                <CardTitle>Información de la Propiedad</CardTitle>
+              <CardHeader className="p-4 md:p-6">
+                <CardTitle className="text-lg">Información de la Propiedad</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 p-4 md:p-6">
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Descripción</h3>
-                  <p className="text-gray-700">{property.description}</p>
+                  <h3 className="text-base md:text-lg font-medium mb-2">Descripción</h3>
+                  <p className="text-sm md:text-base text-gray-700">{property.description}</p>
                 </div>
 
                 <Separator />
 
-                <div>
+                {/* Desktop details grid (hidden on mobile) */}
+                <div className="hidden md:block">
                   <h3 className="text-lg font-medium mb-4">Detalles</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="flex items-center">
@@ -286,12 +375,12 @@ export default function PropertyDetail() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="text-lg font-medium mb-4">Características</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                      <h3 className="text-base md:text-lg font-medium mb-3 md:mb-4">Características</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-3 md:gap-x-4">
                         {features.map((feature, index) => (
                           <div key={index} className="flex items-center">
-                            <Check className="h-5 w-5 text-green-500 mr-2" />
-                            <span>{feature}</span>
+                            <Check className="h-4 w-4 md:h-5 md:w-5 text-green-500 mr-2 flex-shrink-0" />
+                            <span className="text-sm md:text-base">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -302,14 +391,15 @@ export default function PropertyDetail() {
                 <Separator />
 
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Dirección</h3>
-                  <p className="text-gray-700">{property.address}</p>
+                  <h3 className="text-base md:text-lg font-medium mb-2">Dirección</h3>
+                  <p className="text-sm md:text-base text-gray-700">{property.address}</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div>
+          {/* Quick Actions (visible only on desktop) */}
+          <div className="hidden md:block">
             <Card>
               <CardHeader>
                 <CardTitle>Acciones Rápidas</CardTitle>
