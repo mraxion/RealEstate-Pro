@@ -1,0 +1,68 @@
+Estructura Modular del Proyecto
+El proyecto se dividirá en módulos independientes para garantizar que los cambios en diseño, contenido o lógica no afecten otras partes. Cada módulo tendrá su propio control de versiones y pruebas.
+3.1. Módulos Principales
+Módulo de Gestión de Propiedades:
+Funcionalidad: CRUD (Crear, Leer, Actualizar, Eliminar) para propiedades.
+
+Componentes:
+Formulario de carga (imágenes, título, descripción, precio, características: m², habitaciones, etc.).
+
+Vista de lista de propiedades con filtros (ubicación, precio, tipo).
+
+Vista detallada de cada propiedad.
+Independencia: Separar lógica (API) de la UI (React components).
+
+Pruebas: Unitarias para validación de datos, E2E para flujos de carga.
+Módulo de Subida de Imágenes:
+Funcionalidad: Carga, previsualización y optimización de imágenes.
+
+Implementación: Integración con Cloudinary para subir y gestionar imágenes.
+
+Independencia: Componente React reutilizable, con API separada para manejo de imágenes.
+
+Pruebas: Validar formatos, tamaños y errores de carga.
+Módulo de Automatización con n8n:
+Funcionalidad: Automatizar procesos como:
+Enviar notificaciones por email/WhatsApp a usuarios interesados.
+
+Publicar propiedades en redes sociales o portales externos.
+
+Generar reportes periódicos para el administrador.
+Implementación:
+Configurar nodos en n8n para conectar con la API de la web.
+
+Flujos: "Nueva propiedad creada" → "Notificar a usuarios" → "Publicar en X".
+Independencia: n8n opera como servicio externo, conectado vía webhooks.
+
+Pruebas: Simular flujos en n8n para verificar integración.
+Módulo de Diseño y Contenido:
+Funcionalidad: Gestionar colores, tipografías y textos de la web.
+
+Implementación:
+Tailwind CSS con un archivo theme.config.js para variables globales (colores, fuentes).
+
+CMS ligero (como Sanity o Strapi) para textos editables por el administrador.
+Independencia: Separar estilos (CSS) de lógica (JS/TS) y contenido (CMS).
+
+Pruebas: Visual regression testing para detectar cambios no deseados en UI.
+Módulo de Autenticación y Permisos:
+Funcionalidad: Acceso exclusivo para el administrador (y posibles colaboradores).
+
+Implementación: Auth0 o Firebase Authentication para login seguro.
+
+Independencia: Middleware en la API para verificar permisos.
+
+Pruebas: Test de seguridad para accesos no autorizados.
+Módulo de Control de Cambios:
+Funcionalidad: Permitir revertir cambios en caso de fallos.
+
+Implementación:
+Git con ramas (dev, staging, prod) y pull requests.
+
+Backups automáticos de la base de datos (MongoDB Atlas).
+
+Snapshots de estilos y contenido en el CMS.
+Independencia: Scripts de rollback para base de datos y despliegues.
+
+Pruebas: Simular fallos y verificar restauración.
+
