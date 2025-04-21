@@ -99,7 +99,12 @@ export function AppointmentList() {
 
   const getPropertyTitle = (propertyId: number) => {
     const property = properties?.find(p => p.id === propertyId);
-    return property ? property.title : "Propiedad no encontrada";
+    return property ? (
+      <div className="flex items-center gap-2">
+        <Building className="h-4 w-4 text-primary-500" />
+        <span>{property.title}</span>
+      </div>
+    ) : "Propiedad no encontrada";
   };
 
   // Handle form submission

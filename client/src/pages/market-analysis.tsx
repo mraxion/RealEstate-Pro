@@ -206,7 +206,7 @@ export default function MarketAnalysis() {
             <TabsTrigger value="chart" className="flex-1">Gráfico</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="overview" className="border rounded-t-none p-6 pt-4">
+          <TabsContent value="overview" className="border rounded-t-none p-6 pt-4 bg-gradient-to-r from-white to-blue-50">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
                 <CardHeader className="pb-2">

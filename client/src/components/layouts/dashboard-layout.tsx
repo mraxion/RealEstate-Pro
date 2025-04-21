@@ -23,7 +23,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
-  
+
   const navItems = [
     { 
       section: "Principal", 
@@ -126,9 +126,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <h1 className="ml-2 text-xl font-semibold text-neutral-900 bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">InmoAdmin</h1>
           </div>
         </div>
-        
+
         <NavLinks />
-        
+
         <div className="p-4 border-t border-neutral-200">
           <div className="flex items-center">
             <img 
@@ -182,7 +182,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
               </div>
             </SheetContent>
           </Sheet>
-          
+
           <div className="flex items-center cursor-pointer" onClick={() => window.location.href = "/"}>
             <div className="w-7 h-7 text-primary-600">
               <svg fill="currentColor" viewBox="0 0 24 24">
@@ -191,12 +191,12 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             </div>
             <h1 className="ml-2 text-lg font-semibold bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">InmoAdmin</h1>
           </div>
-          
+
           <button type="button" className="flex items-center justify-center w-9 h-9 text-neutral-500 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors">
             <Bell className="h-5 w-5" />
           </button>
         </div>
-        
+
         {/* Mobile page title */}
         <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-200">
           <h1 className="text-lg font-medium text-neutral-900">{title}</h1>
@@ -222,7 +222,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
 
         {/* Page content */}
         <div className="px-4 py-4 md:px-6 md:py-6">
-          {children}
+          <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50">
+            {children}
+          </div>
         </div>
       </main>
     </div>
