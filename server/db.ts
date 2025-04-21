@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
 
 // Create PostgreSQL connection pool
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL?.replace('.us-east-2', '-pooler.us-east-2'),
   max: 5,
   idleTimeoutMillis: 30000,

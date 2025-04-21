@@ -17,35 +17,35 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Property operations
   getProperties(): Promise<Property[]>;
   getProperty(id: number): Promise<Property | undefined>;
   createProperty(property: InsertProperty): Promise<Property>;
   updateProperty(id: number, property: Partial<InsertProperty>): Promise<Property | undefined>;
   deleteProperty(id: number): Promise<boolean>;
-  
+
   // Lead operations
   getLeads(): Promise<Lead[]>;
   getLead(id: number): Promise<Lead | undefined>;
   createLead(lead: InsertLead): Promise<Lead>;
   updateLead(id: number, lead: Partial<InsertLead>): Promise<Lead | undefined>;
   deleteLead(id: number): Promise<boolean>;
-  
+
   // Appointment operations
   getAppointments(): Promise<Appointment[]>;
   getAppointment(id: number): Promise<Appointment | undefined>;
   createAppointment(appointment: InsertAppointment): Promise<Appointment>;
   updateAppointment(id: number, appointment: Partial<InsertAppointment>): Promise<Appointment | undefined>;
   deleteAppointment(id: number): Promise<boolean>;
-  
+
   // Workflow operations
   getWorkflows(): Promise<Workflow[]>;
   getWorkflow(id: number): Promise<Workflow | undefined>;
   createWorkflow(workflow: InsertWorkflow): Promise<Workflow>;
   updateWorkflow(id: number, workflow: Partial<InsertWorkflow>): Promise<Workflow | undefined>;
   deleteWorkflow(id: number): Promise<boolean>;
-  
+
   // Activity operations
   getActivities(limit?: number): Promise<Activity[]>;
   createActivity(activity: InsertActivity): Promise<Activity>;
@@ -61,14 +61,14 @@ export class MemStorage implements IStorage {
   private appointments: Map<number, Appointment>;
   private workflows: Map<number, Workflow>;
   private activities: Map<number, Activity>;
-  
+
   private userId: number;
   private propertyId: number;
   private leadId: number;
   private appointmentId: number;
   private workflowId: number;
   private activityId: number;
-  
+
   public sessionStore: session.Store;
 
   constructor() {
@@ -78,7 +78,7 @@ export class MemStorage implements IStorage {
     this.appointments = new Map();
     this.workflows = new Map();
     this.activities = new Map();
-    
+
     this.userId = 1;
     this.propertyId = 1;
     this.leadId = 1;
@@ -91,7 +91,7 @@ export class MemStorage implements IStorage {
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Eliminar sesiones expiradas cada 24h
     });
-    
+
     // Initialize with sample data
     this.initializeSampleData();
   }
@@ -114,7 +114,7 @@ export class MemStorage implements IStorage {
       progress: 100,
       type: "lead-response"
     });
-    
+
     this.createWorkflow({
       name: "Notificaciones a clientes",
       description: "Envía notificaciones sobre nuevas propiedades a clientes",
@@ -122,7 +122,7 @@ export class MemStorage implements IStorage {
       progress: 100,
       type: "notification"
     });
-    
+
     this.createWorkflow({
       name: "Actualización de precios",
       description: "Actualiza precios basados en el mercado",
@@ -130,7 +130,7 @@ export class MemStorage implements IStorage {
       progress: 60,
       type: "price-update"
     });
-    
+
     this.createWorkflow({
       name: "Sincronización con portales",
       description: "Sincroniza propiedades con portales inmobiliarios",
@@ -178,7 +178,7 @@ export class MemStorage implements IStorage {
       updatedAt: now
     };
     this.properties.set(id, property);
-    
+
     // Create activity log
     await this.createActivity({
       type: "property-created",
@@ -186,21 +186,21 @@ export class MemStorage implements IStorage {
       entityId: property.id,
       entityType: "property"
     });
-    
+
     return property;
   }
 
   async updateProperty(id: number, updateData: Partial<InsertProperty>): Promise<Property | undefined> {
     const property = this.properties.get(id);
     if (!property) return undefined;
-    
+
     const updatedProperty: Property = {
       ...property,
       ...updateData,
       updatedAt: new Date()
     };
     this.properties.set(id, updatedProperty);
-    
+
     // Create activity log
     await this.createActivity({
       type: "property-updated",
@@ -208,16 +208,16 @@ export class MemStorage implements IStorage {
       entityId: updatedProperty.id,
       entityType: "property"
     });
-    
+
     return updatedProperty;
   }
 
   async deleteProperty(id: number): Promise<boolean> {
     const property = this.properties.get(id);
     if (!property) return false;
-    
+
     const result = this.properties.delete(id);
-    
+
     if (result) {
       // Create activity log
       await this.createActivity({
@@ -227,7 +227,7 @@ export class MemStorage implements IStorage {
         entityType: "property"
       });
     }
-    
+
     return result;
   }
 
@@ -250,7 +250,7 @@ export class MemStorage implements IStorage {
       updatedAt: now
     };
     this.leads.set(id, lead);
-    
+
     // Create activity log
     await this.createActivity({
       type: "lead-created",
@@ -258,21 +258,21 @@ export class MemStorage implements IStorage {
       entityId: lead.id,
       entityType: "lead"
     });
-    
+
     return lead;
   }
 
   async updateLead(id: number, updateData: Partial<InsertLead>): Promise<Lead | undefined> {
     const lead = this.leads.get(id);
     if (!lead) return undefined;
-    
+
     const updatedLead: Lead = {
       ...lead,
       ...updateData,
       updatedAt: new Date()
     };
     this.leads.set(id, updatedLead);
-    
+
     // Create activity log
     await this.createActivity({
       type: "lead-updated",
@@ -280,16 +280,16 @@ export class MemStorage implements IStorage {
       entityId: updatedLead.id,
       entityType: "lead"
     });
-    
+
     return updatedLead;
   }
 
   async deleteLead(id: number): Promise<boolean> {
     const lead = this.leads.get(id);
     if (!lead) return false;
-    
+
     const result = this.leads.delete(id);
-    
+
     if (result) {
       // Create activity log
       await this.createActivity({
@@ -299,7 +299,7 @@ export class MemStorage implements IStorage {
         entityType: "lead"
       });
     }
-    
+
     return result;
   }
 
@@ -321,7 +321,7 @@ export class MemStorage implements IStorage {
       createdAt: now
     };
     this.appointments.set(id, appointment);
-    
+
     // Create activity log
     await this.createActivity({
       type: "appointment-created",
@@ -329,20 +329,20 @@ export class MemStorage implements IStorage {
       entityId: appointment.id,
       entityType: "appointment"
     });
-    
+
     return appointment;
   }
 
   async updateAppointment(id: number, updateData: Partial<InsertAppointment>): Promise<Appointment | undefined> {
     const appointment = this.appointments.get(id);
     if (!appointment) return undefined;
-    
+
     const updatedAppointment: Appointment = {
       ...appointment,
       ...updateData
     };
     this.appointments.set(id, updatedAppointment);
-    
+
     // Create activity log
     await this.createActivity({
       type: "appointment-updated",
@@ -350,16 +350,16 @@ export class MemStorage implements IStorage {
       entityId: updatedAppointment.id,
       entityType: "appointment"
     });
-    
+
     return updatedAppointment;
   }
 
   async deleteAppointment(id: number): Promise<boolean> {
     const appointment = this.appointments.get(id);
     if (!appointment) return false;
-    
+
     const result = this.appointments.delete(id);
-    
+
     if (result) {
       // Create activity log
       await this.createActivity({
@@ -369,7 +369,7 @@ export class MemStorage implements IStorage {
         entityType: "appointment"
       });
     }
-    
+
     return result;
   }
 
@@ -392,7 +392,7 @@ export class MemStorage implements IStorage {
       updatedAt: now
     };
     this.workflows.set(id, workflow);
-    
+
     // Create activity log
     await this.createActivity({
       type: "workflow-created",
@@ -400,21 +400,21 @@ export class MemStorage implements IStorage {
       entityId: workflow.id,
       entityType: "workflow"
     });
-    
+
     return workflow;
   }
 
   async updateWorkflow(id: number, updateData: Partial<InsertWorkflow>): Promise<Workflow | undefined> {
     const workflow = this.workflows.get(id);
     if (!workflow) return undefined;
-    
+
     const updatedWorkflow: Workflow = {
       ...workflow,
       ...updateData,
       updatedAt: new Date()
     };
     this.workflows.set(id, updatedWorkflow);
-    
+
     // Create activity log
     await this.createActivity({
       type: "workflow-updated",
@@ -422,16 +422,16 @@ export class MemStorage implements IStorage {
       entityId: updatedWorkflow.id,
       entityType: "workflow"
     });
-    
+
     return updatedWorkflow;
   }
 
   async deleteWorkflow(id: number): Promise<boolean> {
     const workflow = this.workflows.get(id);
     if (!workflow) return false;
-    
+
     const result = this.workflows.delete(id);
-    
+
     if (result) {
       // Create activity log
       await this.createActivity({
@@ -441,7 +441,7 @@ export class MemStorage implements IStorage {
         entityType: "workflow"
       });
     }
-    
+
     return result;
   }
 
@@ -449,7 +449,7 @@ export class MemStorage implements IStorage {
   async getActivities(limit?: number): Promise<Activity[]> {
     const activities = Array.from(this.activities.values())
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    
+
     return limit ? activities.slice(0, limit) : activities;
   }
 
@@ -474,7 +474,7 @@ export class DatabaseStorage implements IStorage {
     // Configurar almacén de sesiones en PostgreSQL
     const PgSessionStore = connectPgSimple(session);
     this.sessionStore = new PgSessionStore({
-      pool,
+      pool: db.pool, // Assuming db.pool is now correctly exported
       createTableIfMissing: true,
       tableName: 'session' // Nombre de la tabla para las sesiones
     });
@@ -513,9 +513,9 @@ export class DatabaseStorage implements IStorage {
       createdAt: now,
       updatedAt: now
     };
-    
+
     const [property] = await db.insert(properties).values(propertyData).returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "property-created",
@@ -523,7 +523,7 @@ export class DatabaseStorage implements IStorage {
       entityId: property.id,
       entityType: "property"
     });
-    
+
     return property;
   }
 
@@ -531,7 +531,7 @@ export class DatabaseStorage implements IStorage {
     // Obtener la propiedad para comprobar que existe
     const [existingProperty] = await db.select().from(properties).where(eq(properties.id, id));
     if (!existingProperty) return undefined;
-    
+
     const now = new Date();
     const [updatedProperty] = await db
       .update(properties)
@@ -541,7 +541,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(properties.id, id))
       .returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "property-updated",
@@ -549,7 +549,7 @@ export class DatabaseStorage implements IStorage {
       entityId: updatedProperty.id,
       entityType: "property"
     });
-    
+
     return updatedProperty;
   }
 
@@ -557,9 +557,9 @@ export class DatabaseStorage implements IStorage {
     // Obtener la propiedad para comprobar que existe y para el log
     const [property] = await db.select().from(properties).where(eq(properties.id, id));
     if (!property) return false;
-    
+
     const result = await db.delete(properties).where(eq(properties.id, id)).returning();
-    
+
     if (result.length > 0) {
       // Create activity log
       await this.createActivity({
@@ -570,7 +570,7 @@ export class DatabaseStorage implements IStorage {
       });
       return true;
     }
-    
+
     return false;
   }
 
@@ -591,9 +591,9 @@ export class DatabaseStorage implements IStorage {
       createdAt: now,
       updatedAt: now
     };
-    
+
     const [lead] = await db.insert(leads).values(leadData).returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "lead-created",
@@ -601,7 +601,7 @@ export class DatabaseStorage implements IStorage {
       entityId: lead.id,
       entityType: "lead"
     });
-    
+
     return lead;
   }
 
@@ -609,7 +609,7 @@ export class DatabaseStorage implements IStorage {
     // Obtener el lead para comprobar que existe
     const [existingLead] = await db.select().from(leads).where(eq(leads.id, id));
     if (!existingLead) return undefined;
-    
+
     const now = new Date();
     const [updatedLead] = await db
       .update(leads)
@@ -619,7 +619,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(leads.id, id))
       .returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "lead-updated",
@@ -627,7 +627,7 @@ export class DatabaseStorage implements IStorage {
       entityId: updatedLead.id,
       entityType: "lead"
     });
-    
+
     return updatedLead;
   }
 
@@ -635,9 +635,9 @@ export class DatabaseStorage implements IStorage {
     // Obtener el lead para comprobar que existe y para el log
     const [lead] = await db.select().from(leads).where(eq(leads.id, id));
     if (!lead) return false;
-    
+
     const result = await db.delete(leads).where(eq(leads.id, id)).returning();
-    
+
     if (result.length > 0) {
       // Create activity log
       await this.createActivity({
@@ -648,7 +648,7 @@ export class DatabaseStorage implements IStorage {
       });
       return true;
     }
-    
+
     return false;
   }
 
@@ -668,9 +668,9 @@ export class DatabaseStorage implements IStorage {
       ...insertAppointment,
       createdAt: now
     };
-    
+
     const [appointment] = await db.insert(appointments).values(appointmentData).returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "appointment-created",
@@ -678,7 +678,7 @@ export class DatabaseStorage implements IStorage {
       entityId: appointment.id,
       entityType: "appointment"
     });
-    
+
     return appointment;
   }
 
@@ -686,13 +686,13 @@ export class DatabaseStorage implements IStorage {
     // Obtener la cita para comprobar que existe
     const [existingAppointment] = await db.select().from(appointments).where(eq(appointments.id, id));
     if (!existingAppointment) return undefined;
-    
+
     const [updatedAppointment] = await db
       .update(appointments)
       .set(updateData)
       .where(eq(appointments.id, id))
       .returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "appointment-updated",
@@ -700,7 +700,7 @@ export class DatabaseStorage implements IStorage {
       entityId: updatedAppointment.id,
       entityType: "appointment"
     });
-    
+
     return updatedAppointment;
   }
 
@@ -708,9 +708,9 @@ export class DatabaseStorage implements IStorage {
     // Obtener la cita para comprobar que existe y para el log
     const [appointment] = await db.select().from(appointments).where(eq(appointments.id, id));
     if (!appointment) return false;
-    
+
     const result = await db.delete(appointments).where(eq(appointments.id, id)).returning();
-    
+
     if (result.length > 0) {
       // Create activity log
       await this.createActivity({
@@ -721,7 +721,7 @@ export class DatabaseStorage implements IStorage {
       });
       return true;
     }
-    
+
     return false;
   }
 
@@ -742,9 +742,9 @@ export class DatabaseStorage implements IStorage {
       createdAt: now,
       updatedAt: now
     };
-    
+
     const [workflow] = await db.insert(workflows).values(workflowData).returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "workflow-created",
@@ -752,7 +752,7 @@ export class DatabaseStorage implements IStorage {
       entityId: workflow.id,
       entityType: "workflow"
     });
-    
+
     return workflow;
   }
 
@@ -760,7 +760,7 @@ export class DatabaseStorage implements IStorage {
     // Obtener el workflow para comprobar que existe
     const [existingWorkflow] = await db.select().from(workflows).where(eq(workflows.id, id));
     if (!existingWorkflow) return undefined;
-    
+
     const now = new Date();
     const [updatedWorkflow] = await db
       .update(workflows)
@@ -770,7 +770,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(workflows.id, id))
       .returning();
-    
+
     // Create activity log
     await this.createActivity({
       type: "workflow-updated",
@@ -778,7 +778,7 @@ export class DatabaseStorage implements IStorage {
       entityId: updatedWorkflow.id,
       entityType: "workflow"
     });
-    
+
     return updatedWorkflow;
   }
 
@@ -786,9 +786,9 @@ export class DatabaseStorage implements IStorage {
     // Obtener el workflow para comprobar que existe y para el log
     const [workflow] = await db.select().from(workflows).where(eq(workflows.id, id));
     if (!workflow) return false;
-    
+
     const result = await db.delete(workflows).where(eq(workflows.id, id)).returning();
-    
+
     if (result.length > 0) {
       // Create activity log
       await this.createActivity({
@@ -799,7 +799,7 @@ export class DatabaseStorage implements IStorage {
       });
       return true;
     }
-    
+
     return false;
   }
 
@@ -809,11 +809,11 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(activities)
       .orderBy(desc(activities.createdAt));
-    
+
     if (limit) {
       query = query.limit(limit);
     }
-    
+
     return query;
   }
 
@@ -823,7 +823,7 @@ export class DatabaseStorage implements IStorage {
       ...insertActivity,
       createdAt: now
     };
-    
+
     const [activity] = await db.insert(activities).values(activityData).returning();
     return activity;
   }
