@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Responsive improvements for forms, cards, grids and tables */
+@layer components {
+  .responsive-form, .responsive-card, .responsive-section {
+    @apply w-full max-w-full p-2 sm:p-4 rounded shadow bg-white;
+  }
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4;
+  }
+  .responsive-table {
+    @apply w-full overflow-x-auto block;
+  }
+  .responsive-table table {
+    @apply min-w-full;
+  }
+  .responsive-btn {
+    @apply px-4 py-2 rounded text-base sm:text-sm;
+  }
+  .responsive-input {
+    @apply w-full p-2 rounded border border-gray-300 text-base;
+  }
+}
+
+/* Utility for mobile padding */
+@media (max-width: 640px) {
+  body {
+    padding: 0.5rem;
+  }
+  h1, h2, h3 {
+    font-size: 1.25rem;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

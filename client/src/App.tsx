@@ -16,8 +16,25 @@ import Workflows from "@/pages/workflows";
 import WorkflowIntegrations from "@/pages/workflow-integrations";
 import MarketAnalysis from "@/pages/market-analysis";
 import NotFound from "@/pages/not-found";
+import Settings from "@/pages/settings";
+import Login from "@/pages/login";
+
+import { useAuth } from "@/context/auth-context";
+import { useLocation } from "wouter";
 
 function Router() {
+  const { user } = useAuth();
+  const [location, navigate] = useLocation();
+
+  // Permitir acceso libre solo a /login
+  if (!user && location !== "/login") {
+    navigate("/login");
+    return null;
+  }
+  if (!user && location === "/login") {
+    return <Login />;
+  }
+
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
@@ -30,19 +47,24 @@ function Router() {
       <Route path="/workflows" component={Workflows} />
       <Route path="/integrations" component={WorkflowIntegrations} />
       <Route path="/market-analysis" component={MarketAnalysis} />
+      <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
+import { AuthProvider } from "@/context/auth-context";
+
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

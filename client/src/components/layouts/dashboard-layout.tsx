@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
@@ -23,6 +24,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const navItems = [
     { 
@@ -70,16 +72,24 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         }
       ]
     },
-    {
-      section: "Configuración",
-      items: [
-        {
-          name: "Configuración",
-          href: "/settings",
-          icon: <Settings className="w-5 h-5 mr-2" />
-        }
-      ]
-    }
+    // Solo mostrar administración si el usuario es superadmin
+    ...(user && user.role === "superadmin"
+      ? [{
+          section: "Administración",
+          items: [
+            {
+              name: "Usuarios",
+              href: "/users",
+              icon: <Users className="w-5 h-5 mr-2" />
+            },
+            {
+              name: "Configuración",
+              href: "/settings",
+              icon: <Settings className="w-5 h-5 mr-2" />
+            }
+          ]
+        }]
+      : []),
   ];
 
   const NavLinks = () => (
@@ -137,8 +147,8 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
               alt="Foto de perfil" 
             />
             <div className="ml-3">
-              <p className="text-sm font-medium text-neutral-800">Ana García</p>
-              <p className="text-xs font-medium text-neutral-500">Administrador</p>
+              <p className="text-sm font-medium text-neutral-800">{user?.name ?? "Invitado"}</p>
+              <p className="text-xs font-medium text-primary-600">{user?.role === "superadmin" ? "Superadministrador" : user?.role === "admin" ? "Administrador" : user?.role === "agent" ? "Agente" : "Sin rol"}</p>
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import compression from "compression";
 import { registerRoutes } from "./routes";
@@ -59,15 +60,14 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  // Permitir configuración por variables de entorno
+  // Forzar IPv4 por defecto
+  const port = process.env.PORT ? Number(process.env.PORT) : 5000;
+  let host = process.env.HOST;
+  if (!host || host === '::1' || host === 'localhost') {
+    host = '127.0.0.1';
+  }
+  server.listen(port, host, () => {
+    log(`Servidor escuchando en http://${host}:${port}`);
   });
 })();

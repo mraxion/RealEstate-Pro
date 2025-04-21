@@ -1,4 +1,50 @@
 import { db } from "../server/db";
+import Database from 'better-sqlite3';
+
+// Crear las tablas si no existen (solo para entorno SQLite)
+const sqlite = new Database('sqlite.db');
+sqlite.exec(`CREATE TABLE IF NOT EXISTS properties (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  type TEXT NOT NULL,
+  price INTEGER NOT NULL,
+  location TEXT NOT NULL,
+  address TEXT NOT NULL,
+  bedrooms INTEGER,
+  bathrooms INTEGER,
+  area INTEGER,
+  features TEXT,
+  images TEXT,
+  status TEXT NOT NULL DEFAULT 'available',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  interest TEXT NOT NULL,
+  budget INTEGER,
+  preferred_location TEXT,
+  stage TEXT NOT NULL DEFAULT 'new',
+  notes TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  last_contact_date TEXT
+);
+CREATE TABLE IF NOT EXISTS appointments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  lead_id INTEGER NOT NULL,
+  property_id INTEGER NOT NULL,
+  date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'scheduled',
+  notes TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+`);
+sqlite.close();
 import { properties } from "../shared/schema";
 
 async function seedProperties() {
@@ -99,12 +145,117 @@ async function seedProperties() {
 
     console.log("Insertando propiedades de Madrid Centro...");
     
-    // Inserta las propiedades en la base de datos
-    for (const property of madridCentroProperties) {
-      await db.insert(properties).values(property);
+    // Inserción directa con better-sqlite3 para máxima compatibilidad
+    const sqlite = new Database('sqlite.db');
+    // Propiedades
+    const insertPropStmt = sqlite.prepare(`INSERT INTO properties (title, description, type, price, location, address, bedrooms, bathrooms, area, features, images, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    for (const prop of madridCentroProperties) {
+      insertPropStmt.run(
+        prop.title,
+        prop.description,
+        prop.type,
+        prop.price,
+        prop.location,
+        prop.address,
+        prop.bedrooms,
+        prop.bathrooms,
+        prop.area,
+        prop.features,
+        prop.images,
+        prop.status
+      );
     }
+    console.log("Propiedades insertadas correctamente (SQL directo en SQLite).\n");
 
-    console.log("Propiedades insertadas correctamente.");
+    // Leads realistas
+    const leads = [
+      {
+        name: "Laura Martínez",
+        email: "laura.martinez@gmail.com",
+        phone: "+34 612 345 678",
+        interest: "penthouse",
+        budget: 950000,
+        preferredLocation: "Madrid, Centro",
+        stage: "qualified",
+        notes: "Busca ático con terraza, lista para comprar si encuentra algo especial.",
+        lastContactDate: "2025-04-20 10:30:00"
+      },
+      {
+        name: "Carlos Ruiz",
+        email: "carlos.ruiz@empresa.com",
+        phone: "+34 699 112 233",
+        interest: "apartment",
+        budget: 500000,
+        preferredLocation: "Malasaña",
+        stage: "interested",
+        notes: "Quiere piso reformado, valora ascensor y portero.",
+        lastContactDate: "2025-04-21 12:00:00"
+      },
+      {
+        name: "Marta Gómez",
+        email: "marta.gomez@hotmail.com",
+        phone: "+34 655 987 321",
+        interest: "loft",
+        budget: 350000,
+        preferredLocation: "Lavapiés",
+        stage: "scheduled",
+        notes: "Busca loft con encanto, techos altos y luz natural.",
+        lastContactDate: "2025-04-22 09:15:00"
+      }
+    ];
+    const insertLeadStmt = sqlite.prepare(`INSERT INTO leads (name, email, phone, interest, budget, preferred_location, stage, notes, last_contact_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    for (const lead of leads) {
+      insertLeadStmt.run(
+        lead.name,
+        lead.email,
+        lead.phone,
+        lead.interest,
+        lead.budget,
+        lead.preferredLocation,
+        lead.stage,
+        lead.notes,
+        lead.lastContactDate
+      );
+    }
+    console.log("Leads insertados correctamente.\n");
+
+    // Citas realistas
+    const appointments = [
+      {
+        leadId: 1,
+        propertyId: 1,
+        date: "2025-04-23 11:00:00",
+        status: "scheduled",
+        notes: "Primera visita con Laura al ático de Plaza Mayor."
+      },
+      {
+        leadId: 2,
+        propertyId: 2,
+        date: "2025-04-24 16:00:00",
+        status: "scheduled",
+        notes: "Carlos quiere ver el piso de Malasaña."
+      },
+      {
+        leadId: 3,
+        propertyId: 3,
+        date: "2025-04-25 10:00:00",
+        status: "scheduled",
+        notes: "Marta tiene cita para visitar el loft de Lavapiés."
+      }
+    ];
+    const insertAppStmt = sqlite.prepare(`INSERT INTO appointments (lead_id, property_id, date, status, notes) VALUES (?, ?, ?, ?, ?)`);
+    for (const app of appointments) {
+      insertAppStmt.run(
+        app.leadId,
+        app.propertyId,
+        app.date,
+        app.status,
+        app.notes
+      );
+    }
+    console.log("Citas insertadas correctamente.\n");
+
+    sqlite.close();
   } catch (error) {
     console.error("Error al insertar propiedades:", error);
   } finally {
