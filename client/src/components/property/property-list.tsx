@@ -126,8 +126,8 @@ export function PropertyList() {
           </div>
         </div>
         
-        {/* Property list */}
-        <div className="overflow-x-auto">
+        {/* Desktop Property List (md and above) */}
+        <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -141,7 +141,7 @@ export function PropertyList() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                // Loading skeleton
+                // Loading skeleton for desktop
                 Array(4).fill(0).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell><Skeleton className="h-4 w-16" /></TableCell>
@@ -180,6 +180,8 @@ export function PropertyList() {
                     house: "Casa",
                     office: "Oficina",
                     commercial: "Local",
+                    penthouse: "Ático",
+                    loft: "Loft",
                   }[property.type as keyof typeof propertyTypeDisplay] || property.type;
                   
                   return (
@@ -219,9 +221,18 @@ export function PropertyList() {
                       </TableCell>
                       <TableCell className="text-sm font-medium">
                         <div className="flex items-center space-x-2">
-                          <Link href={`/properties/${property.id}/edit`}>
-                            <a className="text-primary-600 hover:text-primary-900">Editar</a>
-                          </Link>
+                          <div 
+                            className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                            onClick={() => window.location.href = `/properties/${property.id}`}
+                          >
+                            Ver
+                          </div>
+                          <div 
+                            className="text-primary-600 hover:text-primary-900 cursor-pointer"
+                            onClick={() => window.location.href = `/properties/${property.id}/edit`}
+                          >
+                            Editar
+                          </div>
                           <button 
                             onClick={() => {
                               // Implement delete functionality here
@@ -229,7 +240,7 @@ export function PropertyList() {
                                 // Delete property
                               }
                             }}
-                            className="text-danger-600 hover:text-danger-900"
+                            className="text-red-600 hover:text-red-900"
                           >
                             Eliminar
                           </button>
@@ -241,6 +252,122 @@ export function PropertyList() {
               )}
             </TableBody>
           </Table>
+        </div>
+        
+        {/* Mobile Property Cards (sm and below) */}
+        <div className="md:hidden space-y-4">
+          {isLoading ? (
+            // Loading skeleton for mobile
+            Array(4).fill(0).map((_, index) => (
+              <Card key={index} className="overflow-hidden border border-neutral-200">
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <Skeleton className="h-5 w-36" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Skeleton className="h-20 w-20 rounded-md" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-5 w-24" />
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-3 space-x-2">
+                    <Skeleton className="h-8 w-16 rounded" />
+                    <Skeleton className="h-8 w-16 rounded" />
+                  </div>
+                </div>
+              </Card>
+            ))
+          ) : error ? (
+            <div className="text-center py-8 text-neutral-500">
+              Error al cargar las propiedades. Inténtalo de nuevo.
+            </div>
+          ) : sortedProperties.length === 0 ? (
+            <div className="text-center py-8 text-neutral-500">
+              No se encontraron propiedades. {search && "Prueba con otra búsqueda."}
+            </div>
+          ) : (
+            paginatedProperties.map((property) => {
+              const statusInfo = getPropertyStatus(property.status);
+              const propertyTypeDisplay = {
+                apartment: "Piso",
+                house: "Casa",
+                office: "Oficina",
+                commercial: "Local",
+                penthouse: "Ático",
+                loft: "Loft",
+              }[property.type as keyof typeof propertyTypeDisplay] || property.type;
+              
+              return (
+                <Card key={property.id} className="overflow-hidden border border-neutral-200 hover:shadow-md transition-shadow">
+                  <Link href={`/properties/${property.id}`}>
+                    <div className="p-4 cursor-pointer">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-base font-medium text-neutral-900 line-clamp-1">{property.title}</h3>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.colorClass}`}>
+                          {statusInfo.label}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-start space-x-3">
+                        <div className="h-20 w-20 flex-shrink-0 rounded-md bg-neutral-200 overflow-hidden">
+                          {property.images && (property.images as string[])[0] ? (
+                            <img 
+                              src={(property.images as string[])[0]} 
+                              alt={property.title} 
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full bg-neutral-200 flex items-center justify-center text-neutral-400">
+                              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex-1">
+                          <p className="text-sm text-neutral-500 mb-1">
+                            {property.location}
+                          </p>
+                          <p className="text-xs text-neutral-500 mb-2">
+                            {propertyTypeDisplay} · {property.bedrooms || 0} hab · {property.bathrooms || 0} baño{property.bathrooms !== 1 ? 's' : ''}
+                          </p>
+                          <p className="text-base font-semibold text-primary-700">
+                            {formatCurrency(property.price)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end mt-3 space-x-2">
+                        <Link href={`/properties/${property.id}/edit`}>
+                          <Button size="sm" variant="outline" className="text-xs h-8">
+                            Editar
+                          </Button>
+                        </Link>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-xs h-8 text-red-600 border-red-200 hover:bg-red-50"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (confirm("¿Estás seguro de que deseas eliminar esta propiedad?")) {
+                              // Delete property
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      </div>
+                    </div>
+                  </Link>
+                </Card>
+              );
+            })
+          )}
         </div>
         
         {/* Pagination */}

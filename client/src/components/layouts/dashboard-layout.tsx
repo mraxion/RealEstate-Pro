@@ -115,15 +115,15 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex md:w-64 flex-col bg-white border-r border-neutral-200">
+      <aside className="hidden md:flex md:w-72 lg:w-80 flex-col bg-white border-r border-neutral-200 transition-all duration-300">
         <div className="px-6 py-4 border-b border-neutral-200">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => window.location.href = "/"}>
             <div className="w-8 h-8 text-primary-600">
               <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
               </svg>
             </div>
-            <h1 className="ml-2 text-xl font-semibold text-neutral-900">InmoAdmin</h1>
+            <h1 className="ml-2 text-xl font-semibold text-neutral-900 bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">InmoAdmin</h1>
           </div>
         </div>
         
@@ -132,7 +132,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         <div className="p-4 border-t border-neutral-200">
           <div className="flex items-center">
             <img 
-              className="h-8 w-8 rounded-full" 
+              className="h-9 w-9 rounded-full ring-2 ring-primary-100" 
               src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
               alt="Foto de perfil" 
             />
@@ -144,67 +144,77 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         </div>
       </aside>
 
-      {/* Mobile sidebar */}
-      <div className="md:hidden fixed top-0 left-0 z-40 w-full bg-white border-b border-neutral-200">
+      {/* Mobile header and sidebar */}
+      <div className="md:hidden fixed top-0 left-0 z-40 w-full bg-white border-b border-neutral-200 shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <button type="button" className="text-neutral-500 hover:text-neutral-600">
-                <Menu className="h-6 w-6" />
+              <button type="button" className="flex items-center justify-center w-9 h-9 text-neutral-500 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors">
+                <Menu className="h-5 w-5" />
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
-              <div className="px-6 py-4 border-b border-neutral-200">
+            <SheetContent side="left" className="w-[80%] max-w-[350px] p-0">
+              <div className="px-6 py-5 border-b border-neutral-200">
                 <div className="flex items-center">
                   <div className="w-8 h-8 text-primary-600">
                     <svg fill="currentColor" viewBox="0 0 24 24">
                       <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
                     </svg>
                   </div>
-                  <h1 className="ml-2 text-xl font-semibold text-neutral-900">InmoAdmin</h1>
+                  <h1 className="ml-2 text-xl font-semibold bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">InmoAdmin</h1>
                 </div>
               </div>
-              <NavLinks />
-              <div className="p-4 border-t border-neutral-200">
-                <div className="flex items-center">
-                  <img 
-                    className="h-8 w-8 rounded-full" 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
-                    alt="Foto de perfil" 
-                  />
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-neutral-800">Ana García</p>
-                    <p className="text-xs font-medium text-neutral-500">Administrador</p>
+              <div className="flex flex-col h-full overflow-y-auto">
+                <NavLinks />
+                <div className="mt-auto p-4 border-t border-neutral-200">
+                  <div className="flex items-center">
+                    <img 
+                      className="h-9 w-9 rounded-full ring-2 ring-primary-100" 
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
+                      alt="Foto de perfil" 
+                    />
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-neutral-800">Ana García</p>
+                      <p className="text-xs font-medium text-neutral-500">Administrador</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
           
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => window.location.href = "/"}>
             <div className="w-7 h-7 text-primary-600">
               <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
               </svg>
             </div>
-            <h1 className="ml-2 text-xl font-semibold text-neutral-900">InmoAdmin</h1>
+            <h1 className="ml-2 text-lg font-semibold bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">InmoAdmin</h1>
           </div>
-          <div className="w-6"></div> {/* Spacer for alignment */}
+          
+          <button type="button" className="flex items-center justify-center w-9 h-9 text-neutral-500 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors">
+            <Bell className="h-5 w-5" />
+          </button>
+        </div>
+        
+        {/* Mobile page title */}
+        <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-200">
+          <h1 className="text-lg font-medium text-neutral-900">{title}</h1>
         </div>
       </div>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
-        {/* Header */}
+      <main className="flex-1 overflow-y-auto pt-24 md:pt-0">
+        {/* Desktop Header */}
         <header className="hidden md:block bg-white shadow-sm">
           <div className="px-6 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-neutral-900">{title}</h1>
             <div className="flex items-center space-x-4">
-              <button type="button" className="p-1.5 text-neutral-600 hover:text-neutral-900">
-                <Bell className="h-6 w-6" />
+              <button type="button" className="flex items-center justify-center w-10 h-10 text-neutral-500 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors">
+                <Bell className="h-5 w-5" />
               </button>
-              <button type="button" className="p-1.5 text-neutral-600 hover:text-neutral-900">
-                <Settings className="h-6 w-6" />
+              <button type="button" className="flex items-center justify-center w-10 h-10 text-neutral-500 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition-colors">
+                <Settings className="h-5 w-5" />
               </button>
             </div>
           </div>
