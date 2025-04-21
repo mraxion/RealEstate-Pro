@@ -59,8 +59,13 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           icon: <Zap className="w-5 h-5 mr-2" />
         },
         {
-          name: "Plantillas",
-          href: "/templates",
+          name: "Automa.site",
+          href: "/integrations",
+          icon: <Sliders className="w-5 h-5 mr-2" />
+        },
+        {
+          name: "Análisis de Mercado",
+          href: "/market-analysis",
           icon: <ClipboardList className="w-5 h-5 mr-2" />
         }
       ]
@@ -72,11 +77,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           name: "Configuración",
           href: "/settings",
           icon: <Settings className="w-5 h-5 mr-2" />
-        },
-        {
-          name: "Integraciones",
-          href: "/integrations",
-          icon: <Sliders className="w-5 h-5 mr-2" />
         }
       ]
     }
@@ -90,20 +90,22 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             {section.section}
           </div>
           {section.items.map((item, j) => (
-            <Link key={j} href={item.href}>
-              <a 
-                className={cn(
-                  "flex items-center px-6 py-2.5 text-sm font-medium",
-                  location === item.href 
-                    ? "text-primary-700 bg-primary-50" 
-                    : "text-neutral-700 hover:bg-neutral-100"
-                )}
-                onClick={() => setOpen(false)}
-              >
-                {item.icon}
-                {item.name}
-              </a>
-            </Link>
+            <div key={j}>
+              <Link href={item.href}>
+                <div
+                  className={cn(
+                    "flex items-center px-6 py-2.5 text-sm font-medium cursor-pointer",
+                    location === item.href 
+                      ? "text-primary-700 bg-primary-50" 
+                      : "text-neutral-700 hover:bg-neutral-100"
+                  )}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.icon}
+                  {item.name}
+                </div>
+              </Link>
+            </div>
           ))}
         </div>
       ))}

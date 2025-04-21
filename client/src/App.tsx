@@ -14,6 +14,7 @@ import Leads from "@/pages/leads";
 import Appointments from "@/pages/appointments";
 import Workflows from "@/pages/workflows";
 import WorkflowIntegrations from "@/pages/workflow-integrations";
+import MarketAnalysis from "@/pages/market-analysis";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -27,6 +28,8 @@ function Router() {
       <Route path="/leads" component={Leads} />
       <Route path="/appointments" component={Appointments} />
       <Route path="/workflows" component={Workflows} />
+      <Route path="/integrations" component={WorkflowIntegrations} />
+      <Route path="/market-analysis" component={MarketAnalysis} />
       <Route component={NotFound} />
     </Switch>
   );
