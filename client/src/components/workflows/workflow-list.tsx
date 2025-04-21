@@ -143,7 +143,9 @@ export function WorkflowList() {
       'lead-response': 'Respuesta a leads',
       'notification': 'Notificaciones',
       'price-update': 'Actualización de precios',
-      'portal-sync': 'Sincronización con portales',
+      'fotocasa-sync': 'Sincronización con Fotocasa',
+      'idealista-sync': 'Sincronización con Idealista',
+      'market-analysis': 'Análisis de mercado',
     };
     return typeMap[type] || type;
   };

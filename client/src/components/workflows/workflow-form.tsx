@@ -116,7 +116,9 @@ export function WorkflowForm({ initialData, onSubmit, isSubmitting }: WorkflowFo
                     <SelectItem value="lead-response">Respuesta a leads</SelectItem>
                     <SelectItem value="notification">Notificaciones</SelectItem>
                     <SelectItem value="price-update">Actualización de precios</SelectItem>
-                    <SelectItem value="portal-sync">Sincronización con portales</SelectItem>
+                    <SelectItem value="fotocasa-sync">Sincronización con Fotocasa</SelectItem>
+                    <SelectItem value="idealista-sync">Sincronización con Idealista</SelectItem>
+                    <SelectItem value="market-analysis">Análisis de mercado</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>

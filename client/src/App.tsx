@@ -13,6 +13,7 @@ import PropertyEdit from "@/pages/property-edit";
 import Leads from "@/pages/leads";
 import Appointments from "@/pages/appointments";
 import Workflows from "@/pages/workflows";
+import WorkflowIntegrations from "@/pages/workflow-integrations";
 import NotFound from "@/pages/not-found";
 
 function Router() {
