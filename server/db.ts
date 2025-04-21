@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 import * as schema from "@shared/schema";
 
 // Create PostgreSQL connection pool
-export const pool = new Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL?.replace('.us-east-2', '-pooler.us-east-2'),
   max: 5,
   idleTimeoutMillis: 30000,
@@ -14,5 +14,4 @@ export const pool = new Pool({
 // Create Drizzle ORM client with our schema
 export const db = drizzle(pool, { schema });
 
-export { pool };
 export default db;
