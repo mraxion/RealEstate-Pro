@@ -9,7 +9,7 @@ import {
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import createMemoryStore from "memorystore";
-import { pool, db } from "./db";
+import { db } from "./db";
 import { and, eq, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
